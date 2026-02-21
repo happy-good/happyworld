@@ -3,7 +3,7 @@ let savedUrls = [];
 
 function renderEditView(urlsToEdit = ['', '', '']) {
     mainElement.innerHTML = `
-        <h1>URL Saver</h1>
+        <h1>사이트 관리</h1>
         <form id="urlForm">
             <div class="input-group">
                 <label for="url1">Website 1</label>
@@ -28,7 +28,7 @@ function renderEditView(urlsToEdit = ['', '', '']) {
 function renderLinksView(urls) {
     mainElement.innerHTML = `
         <div class="header-container">
-            <h1>Your Saved Links</h1>
+            <h1>사이트 관리</h1>
             <button class="edit-button">Edit</button>
         </div>
     `;
