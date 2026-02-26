@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentDateElement = document.getElementById('current-date');
     const confirmationDateElement = document.getElementById('confirmation-date');
 
-    // --- Main Render Function ---
+    // --- Main Render Function (Improved) ---
     function render(state) {
         // Render input view
         state.items.forEach((item, index) => {
@@ -49,11 +49,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Render confirmation view
         confirmationList.innerHTML = '';
-        const filledItems = state.items.filter(item => item.text.trim() !== '');
 
-        if (filledItems.length === 0) return;
+        state.items.forEach((item, index) => {
+            // FIX 1: Skip rendering if the item text is empty or just spaces
+            if (item.text.trim() === '') {
+                return;
+            }
 
-        filledItems.forEach((item, originalIndex) => {
             const itemDiv = document.createElement('div');
             itemDiv.className = 'confirmation-item';
 
@@ -67,13 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
             status.textContent = '확인완료';
             status.classList.toggle('hidden', !item.confirmed);
 
-            // Event listener to update state on click
+            // Event listener now reliably uses the correct index
             button.addEventListener('click', () => {
-                 // Find the correct index in the original array
-                const masterIndex = state.items.findIndex(i => i.text === item.text && !i.confirmed);
-                if (masterIndex !== -1) {
-                    const newState = AppState.getState();
-                    newState.items[masterIndex].confirmed = true;
+                const newState = AppState.getState();
+                if (newState.items[index]) {
+                    newState.items[index].confirmed = true;
                     AppState.saveState(newState);
                     render(newState); // Re-render the UI
                 }
@@ -90,30 +90,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const today = new Date().toISOString().slice(0, 10);
         let state = AppState.getState();
 
-        // Check if the saved date is not today
         if (state.savedDate !== today) {
-            // It's a new day! Reset confirmations but keep the text.
             state.items = state.items.map(item => ({ ...item, confirmed: false }));
-            state.savedDate = today; // Update the date
+            state.savedDate = today;
             AppState.saveState(state);
         }
 
-        // Display dates
         const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
         const dateString = new Date(today).toLocaleDateString('ko-KR', dateOptions);
         currentDateElement.textContent = dateString;
         confirmationDateElement.textContent = dateString;
 
-        // Initial render
         render(state);
     }
 
     // --- Event Listeners ---
 
-    // Switch to confirmation view
     function switchToConfirmView() {
         const state = AppState.getState();
         const hasInput = state.items.some(item => item.text.trim() !== '');
+        
+        // Only switch if there's actual content
         if (hasInput) {
             render(state);
             inputViewContainer.classList.add('hidden');
@@ -121,21 +118,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Switch back to input view
     backToEditBtn.addEventListener('click', () => {
         confirmationViewContainer.classList.add('hidden');
         inputViewContainer.classList.remove('hidden');
     });
 
-    // Save state on input change
     userInputs.forEach((input, index) => {
         input.addEventListener('input', () => {
             const newState = AppState.getState();
+            // FIX 2: When text is edited, reset its confirmation status
             newState.items[index].text = input.value;
+            newState.items[index].confirmed = false; 
             AppState.saveState(newState);
         });
 
-        // Handle Enter key
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
