@@ -1,119 +1,152 @@
+/* General Body Styles */
 body {
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 20px;
     background-color: #f0f2f5;
     color: #333;
-    margin: 0;
-    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    box-sizing: border-box;
 }
 
+/* Main Container */
 .container {
-    width: 90%;
-    max-width: 600px;
-    background: #fff;
+    background: #ffffff;
     padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
-header h1 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 10px; /* Adjusted margin */
-}
-
-/* --- Style for the date --- */
-#current-date {
-    text-align: center;
-    color: #666;
-    font-size: 1.1em;
-    margin-bottom: 30px;
-}
-
-/* --- View containers --- */
-#input-view-container {
-    display: block;
-}
-
-#confirmation-view-container {
-    display: block;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
     width: 100%;
-    min-height: 100vh;
-    background-color: #e6f7ff; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    max-width: 600px;
 }
 
-#checklist-container, #confirmation-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+/* Hidden Class */
+.hidden {
+    display: none;
+}
+
+/* Typography */
+h1 {
+    text-align: center;
+    color: #1a237e;
+    margin-bottom: 10px;
+}
+
+#current-date, #confirmation-date {
+    text-align: center; /* Center align both date elements */
+    color: #555;
     margin-bottom: 25px;
+    font-size: 1.1em;
 }
 
-.input-row {
-    width: 100%;
+/* Input View Specifics */
+#input-view-container .input-group {
+    margin-bottom: 15px;
 }
 
 .user-input {
     width: 100%;
     padding: 12px;
-    border: 2px solid #ddd;
+    border: 1px solid #ccc;
     border-radius: 8px;
-    font-size: 16px;
-    box-sizing: border-box; 
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.page-controls {
-    text-align: right;
+.user-input:focus {
+    outline: none;
+    border-color: #1a237e;
+    box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.2);
 }
 
-#back-to-edit-btn {
-    padding: 12px 25px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    color: white;
-    background-color: #007bff;
-    transition: background-color 0.3s ease;
+/* Confirmation View Specifics */
+#confirmation-view-container {
+    background-color: #e8eaf6; /* Distinct background */
+    padding: 30px;
+    border-radius: 12px;
 }
 
-#back-to-edit-btn:hover {
-    background-color: #0056b3;
+#confirmation-view-container .container {
+    overflow: auto; /* Ensure it contains the floated button */
+}
+
+#confirmation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; 
 }
 
 .confirmation-item {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    background: #fff;
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .confirm-btn {
     flex-grow: 1;
     padding: 12px;
     border: none;
-    background-color: #28a745;
+    background-color: #3f51b5;
     color: white;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 1em;
     text-align: left;
+    transition: background-color 0.3s;
+}
+
+.confirm-btn:hover {
+    background-color: #303f9f;
 }
 
 .status-text {
-    flex-grow: 1;
-    font-size: 16px;
-    color: #28a745;
+    flex-grow: 1; /* Allow it to fill space */
+    text-align: center; /* Center the text */
     font-weight: bold;
-    white-space: nowrap;
-    text-align: center;
+    color: #4caf50;
+    padding: 12px 0;
 }
 
-.hidden {
-    display: none !important;
+
+/* General Button Style */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    border: none;
+    background-color: #1a237e;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #0d124f;
+}
+
+/* Specific Button for Editing */
+#back-to-edit-btn {
+    background-color: #78909c;
+    width: auto; /* Size to content */
+    float: right; /* Position to the right */
+    text-align: center; /* Center the text inside the button */
+    /* Override centering margins and set specific padding */
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+#back-to-edit-btn:hover {
+    background-color: #546e7a;
 }
