@@ -77,9 +77,11 @@ for (let i = 0; i < 10; i++) {
 
 function saveInputs() {
     const inputs = document.querySelectorAll(".task-input");
+    const existingTasks = JSON.parse(localStorage.getItem("tasks")) || [];
     let data = [];
-    inputs.forEach(input => {
-        data.push({ text: input.value, done: false });
+    inputs.forEach((input, i) => {
+        const existingTask = existingTasks[i] || { done: false };
+        data.push({ text: input.value, done: existingTask.done });
     });
     localStorage.setItem("tasks", JSON.stringify(data));
 }
