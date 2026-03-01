@@ -108,7 +108,8 @@ h2{
   box-shadow: none;
 }
 
-.hidden{display:none;}
+/* 화면 전환을 위한 숨김 클래스 */
+.hidden { display: none; }
 
 /* 모든 버튼 공통 스타일 */
 button{
@@ -173,4 +174,112 @@ button:active {
   font-weight: bold;
 }
 
-.task-btn.done span:last-child { font-weight: 600; }
+/* 완료 상태 컨테이너 */
+.status-container {
+  display: flex;
+  align-items: center;
+}
+
+.done-text {
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.cancel-done-btn {
+  padding: 5px 10px; /* 크기 줄임 */
+  font-size: 12px; /* 폰트 크기 줄임 */
+  font-weight: 500;
+  border-radius: 8px;
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #255d28;
+  margin: 0; /* 주변 여백 제거 */
+  box-shadow: none; /* 그림자 제거 */
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
+.cancel-done-btn:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+  transform: none; /* 호버 효과 제거 */
+  box-shadow: none;
+}
+
+
+/* 비밀번호 모달 스타일 */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none; /* 기본적으로는 클릭 안되게 */
+  transition: opacity 0.3s ease;
+}
+
+/* 모달을 보이게 하는 클래스 */
+.modal-overlay.is-visible {
+  opacity: 1;
+  pointer-events: auto; /* 보일 때는 클릭 가능하게 */
+}
+
+.modal-content {
+  background: rgba(255, 255, 255, 0.8);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  width: 90%;
+  max-width: 340px;
+  text-align: center;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+/* 모달 보일 때의 콘텐츠 스타일 */
+.modal-overlay.is-visible .modal-content {
+  transform: scale(1);
+}
+
+.modal-content h3 {
+  font-weight: 600;
+  font-size: 22px;
+  color: #1a2b4b;
+  margin-bottom: 10px;
+}
+
+.modal-content p {
+  margin-bottom: 20px;
+  color: #555;
+  line-height: 1.5;
+}
+
+#passwordInput {
+  width: 100%;
+  padding: 15px;
+  font-size: 16px;
+  text-align: center;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+}
+
+#passwordInput:focus {
+  outline: none;
+  border-color: #66a6ff;
+  box-shadow: 0 0 15px rgba(102, 166, 255, 0.4);
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 10px; /* 버튼 사이 간격 */
+}
+
+.modal-buttons button {
+  flex: 1; /* 버튼이 공간을 균등하게 차지 */
+  margin-top: 0;
+}

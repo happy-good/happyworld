@@ -11,6 +11,12 @@ const completeBtn=document.getElementById("completeBtn");
 const backTo1=document.getElementById("backTo1");
 const backTo2=document.getElementById("backTo2");
 
+// 모달 요소 추가
+const passwordModal = document.getElementById("passwordModal");
+const passwordInput = document.getElementById("passwordInput");
+const cancelPassword = document.getElementById("cancelPassword");
+const confirmPassword = document.getElementById("confirmPassword");
+
 /* 날짜 */
 function getTodayKey(){
   return new Date().toISOString().split("T")[0];
@@ -140,23 +146,48 @@ completeBtn.addEventListener("click",()=>{
 });
 
 /* 버튼 화면 */
-function renderButtons(data){
-  screen3.innerHTML="";
-  data.tasks.forEach((task,index)=>{
-    const btn=document.createElement("button");
-    btn.className="task-btn";
-    if(task.done) btn.classList.add("done");
+function renderButtons(data) {
+  screen3.innerHTML = "";
+  data.tasks.forEach((task, index) => {
+    const btn = document.createElement("button");
+    btn.className = "task-btn";
 
-    btn.innerHTML=`
-      <span>${task.text}</span>
-      <span>${task.done?"완료":""}</span>
-    `;
+    const textSpan = document.createElement("span");
+    textSpan.textContent = task.text;
+    btn.appendChild(textSpan);
 
-    btn.addEventListener("click",()=>{
-      task.done=true;
-      saveData(data);
-      renderButtons(data);
-    });
+    if (task.done) {
+      btn.classList.add("done");
+
+      const statusContainer = document.createElement("div");
+      statusContainer.className = "status-container";
+
+      const doneText = document.createElement("span");
+      doneText.textContent = "완료";
+      doneText.className = "done-text";
+
+      const cancelDoneBtn = document.createElement("button");
+      cancelDoneBtn.textContent = "취소";
+      cancelDoneBtn.className = "cancel-done-btn";
+
+      cancelDoneBtn.addEventListener("click", (event) => {
+        event.stopPropagation(); // 메인 버튼의 클릭 이벤트 전파를 막습니다.
+        task.done = false;
+        saveData(data);
+        renderButtons(data);
+      });
+
+      statusContainer.appendChild(doneText);
+      statusContainer.appendChild(cancelDoneBtn);
+      btn.appendChild(statusContainer);
+    } else {
+      // 완료되지 않은 항목에만 완료 처리 클릭 이벤트를 추가합니다.
+      btn.addEventListener("click", () => {
+        task.done = true;
+        saveData(data);
+        renderButtons(data);
+      });
+    }
 
     screen3.appendChild(btn);
   });
@@ -164,15 +195,62 @@ function renderButtons(data){
   showScreen(3);
 }
 
+
 /* 뒤로가기 */
 backTo1.addEventListener("click",()=>{
   showScreen(1);
 });
 
-backTo2.addEventListener("click",()=>{
-  const data=resetIfDateChanged();
-  createInputs(data.count,data.inputs);
-  showScreen(2);
+// backTo2 버튼: 모달 띄우기
+backTo2.addEventListener("click", () => {
+  passwordModal.classList.add("is-visible"); // is-visible 클래스 추가
+  passwordInput.value = ""; // 입력창 초기화
+  passwordInput.focus(); // 입력창에 포커스
+});
+
+// 모달 닫기 (취소 버튼)
+cancelPassword.addEventListener("click", () => {
+  passwordModal.classList.remove("is-visible"); // is-visible 클래스 제거
+});
+
+// 모달 외부 클릭 시 닫기
+passwordModal.addEventListener("click", (event) => {
+  if (event.target === passwordModal) {
+    passwordModal.classList.remove("is-visible"); // is-visible 클래스 제거
+  }
+});
+
+// 비밀번호 확인 로직
+confirmPassword.addEventListener("click", () => {
+  const password = passwordInput.value;
+  if (password === "0000") {
+    passwordModal.classList.remove("is-visible"); // is-visible 클래스 제거
+    const data = resetIfDateChanged();
+    createInputs(data.count, data.inputs);
+    showScreen(2);
+  } else {
+    // 간단한 흔들기 애니메이션 효과
+    passwordModal.querySelector(".modal-content").animate([
+      { transform: 'translateX(0)' },
+      { transform: 'translateX(-10px)' },
+      { transform: 'translateX(10px)' },
+      { transform: 'translateX(-10px)' },
+      { transform: 'translateX(10px)' },
+      { transform: 'translateX(0)' },
+    ], {
+      duration: 500,
+      easing: 'ease-in-out'
+    });
+    passwordInput.value = ""; // 입력창 비우기
+    passwordInput.focus();
+  }
+});
+
+// 비밀번호 입력창에서 Enter 키 누를 때 확인 버튼 클릭
+passwordInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") {
+    confirmPassword.click();
+  }
 });
 
 /* 초기 실행 */
