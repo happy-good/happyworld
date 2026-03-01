@@ -112,7 +112,10 @@ goToScreen2.addEventListener("click",()=>{
 
   let data=resetIfDateChanged();
   data.count=count;
-  data.inputs=new Array(count).fill("");
+  // 목록 개수가 변경되면, 입력값 배열도 길이에 맞게 초기화합니다.
+  if (data.inputs.length !== count) {
+      data.inputs = new Array(count).fill("");
+  }
   saveData(data);
 
   createInputs(count,data.inputs);
@@ -130,14 +133,23 @@ countInput.addEventListener("keydown", (event) => {
 completeBtn.addEventListener("click",()=>{
   let data=resetIfDateChanged();
 
+  // 기존 task의 완료 상태를 text 기준으로 저장합니다.
+  const oldTasksStatus = {};
+  data.tasks.forEach(task => {
+      oldTasksStatus[task.text] = task.done;
+  });
+
   const inputs=screen2.querySelectorAll("input");
   data.tasks=[];
   data.inputs=[];
 
   inputs.forEach(input=>{
     data.inputs.push(input.value);
-    if(input.value.trim()!==""){
-      data.tasks.push({text:input.value.trim(),done:false});
+    const text = input.value.trim();
+    if(text!==""){
+        // 기존에 있던 항목이면 완료 상태를 유지하고, 새로운 항목이면 false로 설정합니다.
+        const isDone = oldTasksStatus[text] || false;
+        data.tasks.push({text: text, done: isDone});
     }
   });
 
